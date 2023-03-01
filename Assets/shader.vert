@@ -1,11 +1,16 @@
 #version 330 core
 
-layout(location = 0) in vec3 position;
+in vec3 position;
+in vec2 textureCoords;
 
-out vec3 colour;
+out vec2 pass_textureCoords;
+
+uniform mat4 transformationMatrix;
+uniform mat4 projectionMatrix;
+uniform mat4 viewMatrix;
 
 void main()
 {
-    gl_Position = vec4(position, 1.0);
-    colour = vec3(position.x + 0.5, 1.0, position.y + 0.5);
+    gl_Position = vec4(position, 1.0) * transformationMatrix * viewMatrix * projectionMatrix;
+    pass_textureCoords = textureCoords;
 }

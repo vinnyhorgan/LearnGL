@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Collections.Generic;
 using OpenTK.Graphics.OpenGL4;
+using OpenTK.Mathematics;
 
 namespace LearnGL
 {
@@ -8,7 +10,9 @@ namespace LearnGL
     {
         public readonly int ID;
 
-        public Shader(string vertPath, string fragPath)
+        private Dictionary<string, int> uniformLocations;
+
+        public Shader(string vertPath, string fragPath, Dictionary<int, string> attributes)
         {
             var shaderSource = File.ReadAllText(vertPath);
             var vertexShader = GL.CreateShader(ShaderType.VertexShader);
@@ -24,12 +28,28 @@ namespace LearnGL
 
             GL.AttachShader(ID, vertexShader);
             GL.AttachShader(ID, fragmentShader);
+
+            foreach (var attribute in attributes)
+            {
+                GL.BindAttribLocation(ID, attribute.Key, attribute.Value);
+            }
+
             LinkProgram(ID);
 
             GL.DetachShader(ID, vertexShader);
             GL.DetachShader(ID, fragmentShader);
             GL.DeleteShader(vertexShader);
             GL.DeleteShader(fragmentShader);
+
+            GL.GetProgram(ID, GetProgramParameterName.ActiveUniforms, out var numberOfUniforms);
+
+            uniformLocations = new Dictionary<string, int>();
+
+            for (int i = 0; i < numberOfUniforms; i++)
+            {
+                var name = GL.GetActiveUniform(ID, i, out _, out _);
+                uniformLocations.Add(name, GL.GetUniformLocation(ID, name));
+            }
         }
 
         public void Attach()
@@ -45,6 +65,42 @@ namespace LearnGL
         public void Unload()
         {
             GL.DeleteProgram(ID);
+        }
+
+        public void SetInt(string name, int value)
+        {
+            GL.UseProgram(ID);
+            GL.Uniform1(uniformLocations[name], value);
+        }
+
+        public void SetFloat(string name, float value)
+        {
+            GL.UseProgram(ID);
+            GL.Uniform1(uniformLocations[name], value);
+        }
+
+        public void SetBoolean(string name, bool value)
+        {
+            float toLoad = 0;
+
+            if (value)
+            {
+                toLoad = 1;
+            }
+
+            GL.Uniform1(uniformLocations[name], toLoad);
+        }
+
+        public void SetVector3(string name, Vector3 value)
+        {
+            GL.UseProgram(ID);
+            GL.Uniform3(uniformLocations[name], value);
+        }
+
+        public void SetMatrix(string name, Matrix4 value)
+        {
+            GL.UseProgram(ID);
+            GL.UniformMatrix4(uniformLocations[name], true, ref value);
         }
 
         private static void CompileShader(int shader)

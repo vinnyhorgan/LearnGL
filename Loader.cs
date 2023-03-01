@@ -9,22 +9,23 @@ namespace LearnGL
         private List<int> vbos = new List<int>();
         private List<int> textures = new List<int>();
 
-        public Model LoadModel(float[] positions, int[] indices)
+        public Model LoadModel(float[] positions, float[] textureCoords, int[] indices)
         {
             int vaoID = CreateVAO();
-            StoreData(0, positions);
+            StoreData(0, 3, positions);
+            StoreData(1, 2, textureCoords);
             BindIndicesBuffer(indices);
             UnbindVAO();
 
             return new Model(vaoID, indices.Length);
         }
 
-        public int LoadTexture(string path)
+        public Texture LoadTexture(string path)
         {
             Texture texture = Texture.LoadTexture(path);
             textures.Add(texture.ID);
 
-            return texture.ID;
+            return texture;
         }
 
         public void Unload()
@@ -59,14 +60,14 @@ namespace LearnGL
             GL.BindVertexArray(0);
         }
 
-        private void StoreData(int attribute, float[] data)
+        private void StoreData(int attribute, int coordinateSize, float[] data)
         {
             int vboID = GL.GenBuffer();
             vbos.Add(vboID);
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, vboID);
             GL.BufferData(BufferTarget.ArrayBuffer, data.Length * sizeof(float), data, BufferUsageHint.StreamDraw);
-            GL.VertexAttribPointer(attribute, 3, VertexAttribPointerType.Float, false, 0, 0);
+            GL.VertexAttribPointer(attribute, coordinateSize, VertexAttribPointerType.Float, false, 0, 0);
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
         }
 

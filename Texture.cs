@@ -20,8 +20,6 @@ namespace LearnGL
             GL.ActiveTexture(TextureUnit.Texture0);
             GL.BindTexture(TextureTarget.Texture2D, id);
 
-            StbImage.stbi_set_flip_vertically_on_load(1);
-
             using (Stream stream = File.OpenRead(path))
             {
                 ImageResult image = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);

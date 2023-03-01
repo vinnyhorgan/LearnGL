@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CjClutter.ObjLoader" Version="1.0.0" />
     <PackageReference Include="ImGui.NET" Version="1.89.4" />
     <PackageReference Include="OpenTK" Version="4.7.7" />
     <PackageReference Include="StbImageSharp" Version="2.27.13" />
@@ -17,10 +18,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Assets\salvo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\shader.frag">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\shader.vert">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\stall.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\stallTexture.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
