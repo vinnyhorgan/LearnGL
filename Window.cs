@@ -18,28 +18,6 @@ namespace LearnGL
         Loader loader;
         Renderer renderer;
 
-        float[] vertices =
-        {
-            -0.5f, 0.5f, 0f,
-            -0.5f, -0.5f, 0f,
-            0.5f, -0.5f, 0f,
-            0.5f, 0.5f, 0f,
-        };
-
-        float[] textureCoords =
-        {
-            0, 0,
-            0, 1,
-            1, 1,
-            1, 0
-        };
-
-        int[] indices =
-        {
-            0, 1, 3,
-            3, 1, 2
-        };
-
         Dictionary<int, string> shaderAttributes;
 
         Shader shader;
@@ -47,10 +25,9 @@ namespace LearnGL
         Texture texture;
         TexturedModel texturedModel;
         Entity entity;
+        Light light;
 
         Camera camera;
-
-        Model stall;
 
         public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
             : base(gameWindowSettings, nativeWindowSettings)
@@ -68,22 +45,25 @@ namespace LearnGL
 
             loader = new Loader();
 
-            shaderAttributes = new Dictionary<int, string>();
-            shaderAttributes.Add(0, "position");
-            shaderAttributes.Add(1, "textureCoords");
+            shaderAttributes = new Dictionary<int, string>
+            {
+                { 0, "position" },
+                { 1, "textureCoords" },
+                { 2, "normal" }
+            };
 
             shader = new Shader("Assets/shader.vert", "Assets/shader.frag", shaderAttributes);
 
             renderer = new Renderer(shader);
 
-            model = loader.LoadModel(vertices, textureCoords, indices);
-            texture = loader.LoadTexture("Assets/salvo.png");
+            model = OBJLoader.LoadOBJModel("Assets/stall.obj", loader);
+            texture = loader.LoadTexture("Assets/white.png");
             texturedModel = new TexturedModel(model, texture);
-            entity = new Entity(texturedModel, new Vector3(0, 0, -1), 0, 0, 0, 1);
+            entity = new Entity(texturedModel, new Vector3(0, 0, 0), 0, 0, 0, 1);
+
+            light = new Light(new Vector3(0, 0, 0), new Vector3(1, 1, 1));
 
             camera = new Camera();
-
-            stall = OBJLoader.LoadOBJModel("Assets/stall.obj");
         }
 
         protected override void OnUpdateFrame(FrameEventArgs args)
@@ -100,7 +80,7 @@ namespace LearnGL
             camera.Move(KeyboardState);
 
             // entity.IncreasePosition(0, 0, -0.02f);
-            // entity.IncreaseRotation(0, 1, 0);
+            entity.IncreaseRotation(0, 1, 0);
         }
 
         protected override void OnRenderFrame(FrameEventArgs args)
@@ -112,6 +92,10 @@ namespace LearnGL
             shader.SetMatrix("viewMatrix", camera.GetViewMatrix());
 
             shader.Attach();
+
+            shader.SetVector3("lightPosition", light.Position);
+            shader.SetVector3("lightColor", light.Color);
+
             renderer.Render(entity, shader);
             shader.Detach();
 

@@ -35,6 +35,7 @@ namespace LearnGL
             GL.BindVertexArray(model.VaoID);
             GL.EnableVertexAttribArray(0);
             GL.EnableVertexAttribArray(1);
+            GL.EnableVertexAttribArray(2);
 
             Matrix4 transformationMatrix = Utils.createTransformationMatrix(entity.Position, entity.RotX, entity.RotY, entity.RotZ, entity.Scale);
 
@@ -43,8 +44,10 @@ namespace LearnGL
             GL.ActiveTexture(TextureUnit.Texture0);
             GL.BindTexture(TextureTarget.Texture2D, texturedModel.Texture.ID);
             GL.DrawElements(BeginMode.Triangles, model.VertexCount, DrawElementsType.UnsignedInt, 0);
+
             GL.DisableVertexAttribArray(0);
             GL.DisableVertexAttribArray(1);
+            GL.DisableVertexAttribArray(2);
             GL.BindVertexArray(0);
         }
 

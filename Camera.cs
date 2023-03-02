@@ -8,7 +8,9 @@ namespace LearnGL
         public Vector3 Position = new Vector3(0, 0, 0);
         public float Pitch;
         public float Yaw;
-        public float Roll;
+        public float Roll = 0;
+        public float MoveSpeed = 0.5f;
+        public float LookSpeed = 1.5f;
 
         public Camera()
         {
@@ -19,42 +21,42 @@ namespace LearnGL
         {
             if (keyboardState.IsKeyDown(Keys.W))
             {
-                Position.Z -= 0.02f;
+                Position.Z -= MoveSpeed;
             }
 
             if (keyboardState.IsKeyDown(Keys.S))
             {
-                Position.Z += 0.02f;
+                Position.Z += MoveSpeed;
             }
 
             if (keyboardState.IsKeyDown(Keys.A))
             {
-                Position.X -= 0.02f;
+                Position.X -= MoveSpeed;
             }
 
             if (keyboardState.IsKeyDown(Keys.D))
             {
-                Position.X += 0.02f;
+                Position.X += MoveSpeed;
             }
 
             if (keyboardState.IsKeyDown(Keys.Right))
             {
-                Yaw += 1f;
+                Yaw += LookSpeed;
             }
 
             if (keyboardState.IsKeyDown(Keys.Left))
             {
-                Yaw -= 1f;
+                Yaw -= LookSpeed;
             }
 
             if (keyboardState.IsKeyDown(Keys.Up))
             {
-                Pitch -= 1f;
+                Pitch -= LookSpeed;
             }
 
             if (keyboardState.IsKeyDown(Keys.Down))
             {
-                Pitch += 1f;
+                Pitch += LookSpeed;
             }
         }
 

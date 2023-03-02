@@ -9,11 +9,12 @@ namespace LearnGL
         private List<int> vbos = new List<int>();
         private List<int> textures = new List<int>();
 
-        public Model LoadModel(float[] positions, float[] textureCoords, int[] indices)
+        public Model LoadModel(float[] positions, float[] textureCoords, float[] normals, int[] indices)
         {
             int vaoID = CreateVAO();
             StoreData(0, 3, positions);
             StoreData(1, 2, textureCoords);
+            StoreData(2, 3, normals);
             BindIndicesBuffer(indices);
             UnbindVAO();
 
